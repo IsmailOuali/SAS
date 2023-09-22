@@ -1,11 +1,14 @@
 #include<stdio.h>
 #include<string.h>
+#include<time.h>
 
-int i, j, n;
+int i, j, n, tacheid =1;
 int size = 0;
 char choice;
 char choice2;
-char status[10];
+char updatechoice;
+char statut[20];
+char *s;
 
 
 typedef struct tache
@@ -33,16 +36,23 @@ void displaymenu()
 }
 void displaytask(tache t[100], int i)
 {
-    printf("%d ) Titre: %s, Description: %s, Deadline: %d \n", t[i].id, t[i].titre, t[i].description, t[i].deadline);
+    if (t[i].status == 1)
+    {
+        strcpy(statut, "A realiser");
+    }
+    else if(t[i].status == 2)
+    {
+        strcpy(statut, "En cours");
+    }
+    else
+        strcpy(statut, "Finalise");
+    printf("%d ) Titre: %s, Description: %s, Deadline: %d Statut(%s)\n", t[i].id, t[i].titre, t[i].description, t[i].deadline, statut);
 
 }
 void addtask(tache t[100], int i)
 {
     for (i = 0; i < n; i++)
     {
-
-        printf("Entrer l'id de la tache: ");
-        scanf("%d", &t[i].id);
         printf("Entrer le titre de la tache: ");
         getchar();
         gets(t[i].titre);
@@ -52,8 +62,10 @@ void addtask(tache t[100], int i)
         scanf("%d", &t[i].deadline);
         printf("Entrer le status de tache\n1=> A realiser\t 2=> En cours de realiser\t 3=> Done  ");
         scanf("%d", &t[i].status);
-        size++;
+        t[i].id = tacheid;
+        tacheid++;
     }
+    size = size + n;
 }
 void displaysortmenu()
 {
@@ -67,9 +79,9 @@ void displaysortmenu()
 
 }
 void sortalpha(tache t[100]){
-    for ( i = 0; i < n; i++)
+    for ( i = 0; i < size; i++)
     {
-        for (j = 0; j < n - 1; j++)
+        for (j = 0; j < size - 1; j++)
         {
             int result = strcmp(t[j].titre, t[j+1].titre);
             if (result > 0)
@@ -81,10 +93,23 @@ void sortalpha(tache t[100]){
             }
             
         }
-        
     }
-    
+    printf("Les taches sont trier on alphabetic");
 }
+
+void updatemenu()
+{
+    printf("-*-*-*-*-( Menu de modification)-*-*-*-*-\n");
+    printf("1) Modifier la description\n");
+    printf("2) Modifier le statut\n");
+    printf("3) Modifier le deadline\n");
+    scanf("%c", &updatechoice);
+}
+
+/*void update(tache *t, char *str)
+{
+    strcpy(t, s);
+}*/
 
 
 int main()
@@ -105,27 +130,38 @@ int main()
                 
             case '2': // Afficher les taches
 
-                for ( i = 0; i < n; i++)
+                for ( i = 0; i < size; i++)
                 {
                     displaytask(task, i);
                 }
                 break;
             
-            case '3':
+            case '3':  // Trier les taches
                 displaysortmenu();
                 switch (choice2)
                 {
-                    case 1:
+                    case '1':
                         sortalpha(task);
                         break;
-                    case 4:
+                    case '4':
                         displaymenu();
                         break;
                 
                     default:
                         break;
                 }
-            
+            case '4': // Modifier les taches
+                updatemenu();
+                switch (updatechoice)
+                {
+                case '1':
+                    printf("Choisissez l id du tache \n");
+                    
+                    break;
+                
+                default:
+                    break;
+                }
         }
     }while (choice != '#');
 }
